@@ -47,6 +47,9 @@ body {
     text-shadow:0 0 12px rgba(255,215,0,0.6);
     animation: textPulse 1.5s ease-in-out infinite alternate;
 }
+.description span {
+    color:#25D366;
+}
 
 /* ANIMACION TEXTO */
 @keyframes textPulse { from { text-shadow:0 0 12px rgba(255,215,0,0.6); } to { text-shadow:0 0 20px rgba(255,235,0,0.9); } }
@@ -69,21 +72,21 @@ body {
     font-weight:900;
     border-radius:50px;
     cursor:pointer;
-    box-shadow:0 8px 20px rgba(37,211,102,0.4);
+    box-shadow:0 0 20px rgba(37,211,102,0.8), 0 0 40px rgba(37,211,102,0.6);
     transition:0.3s;
     display:flex;
     align-items:center;
     justify-content:center;
-    position:relative;
+    gap:10px;
     text-transform:uppercase;
     animation:pulseBtn 2s infinite;
 }
-.cta-button:hover { transform:scale(1.05); box-shadow:0 12px 30px rgba(37,211,102,0.6); }
+.cta-button:hover { transform:scale(1.05); box-shadow:0 0 25px rgba(37,211,102,1), 0 0 50px rgba(37,211,102,0.8); }
 .cta-button:active { transform:scale(0.95); }
 @keyframes pulseBtn { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
 
-/* LOGO WHATSAPP DENTRO DEL BOTON */
-.cta-button img { width:24px; height:24px; margin-right:10px; }
+.cta-button img { width:24px; height:24px; }
+.cta-button span { line-height:1; }
 
 /* CONTADOR */
 .countdown { font-size:1rem; color:#ffed4e; font-weight:900; margin-top:10px; text-shadow:0 0 8px rgba(255,235,0,0.8); animation:flash 1.5s infinite; }
@@ -115,7 +118,7 @@ body {
     <img src="https://goldcloverlanding.netlify.app/logo.png" alt="Gold Clover" class="logo">
 
     <!-- TEXTO LLAMATIVO -->
-    <p class="description">¡ESCRIBINOS EN WHATSAPP Y RECIBÍ UN 30% EXTRA!</p>
+    <p class="description">🚀 ¡Activá AHORA tu <span>BONO del 30% EXTRA</span> por WhatsApp!</p>
 
     <!-- FLECHA SEÑAL -->
     <div class="arrow">👇</div>
@@ -123,7 +126,7 @@ body {
     <!-- BOTON WHATSAPP -->
     <button class="cta-button" onclick="handleButtonClick()">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        Activar Beneficio
+        <span>Chatear y Reclamar Bono</span>
     </button>
 
     <!-- CONTADOR -->
