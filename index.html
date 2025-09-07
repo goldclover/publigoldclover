@@ -47,9 +47,6 @@ body {
     text-shadow:0 0 12px rgba(255,215,0,0.6);
     animation: textPulse 1.5s ease-in-out infinite alternate;
 }
-.description span {
-    color:#25D366;
-}
 
 /* ANIMACION TEXTO */
 @keyframes textPulse { from { text-shadow:0 0 12px rgba(255,215,0,0.6); } to { text-shadow:0 0 20px rgba(255,235,0,0.9); } }
@@ -72,25 +69,34 @@ body {
     font-weight:900;
     border-radius:50px;
     cursor:pointer;
-    box-shadow:0 0 20px rgba(37,211,102,0.8), 0 0 40px rgba(37,211,102,0.6);
+    box-shadow:0 8px 20px rgba(37,211,102,0.4);
     transition:0.3s;
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:10px;
+    position:relative;
     text-transform:uppercase;
     animation:pulseBtn 2s infinite;
+    margin-top:10px;
 }
-.cta-button:hover { transform:scale(1.05); box-shadow:0 0 25px rgba(37,211,102,1), 0 0 50px rgba(37,211,102,0.8); }
+.cta-button:hover { transform:scale(1.05); box-shadow:0 12px 30px rgba(37,211,102,0.6); }
 .cta-button:active { transform:scale(0.95); }
 @keyframes pulseBtn { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
 
-.cta-button img { width:24px; height:24px; }
-.cta-button span { line-height:1; }
+/* LOGO WHATSAPP DENTRO DEL BOTON */
+.cta-button img { width:24px; height:24px; margin-right:10px; }
+
+/* MENSAJE DE AUTOREDIRECCIÓN */
+.autoredirect {
+    font-size:0.95rem;
+    color:#ffed4e;
+    margin-bottom:10px;
+    animation:flash 1.5s infinite;
+}
+@keyframes flash { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
 
 /* CONTADOR */
 .countdown { font-size:1rem; color:#ffed4e; font-weight:900; margin-top:10px; text-shadow:0 0 8px rgba(255,235,0,0.8); animation:flash 1.5s infinite; }
-@keyframes flash { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
 
 /* NOTIFICACIONES SCROLL */
 .notification-container { width:100%; max-width:400px; height:40px; overflow:hidden; position:relative; margin:15px auto; border-radius:10px; }
@@ -118,15 +124,18 @@ body {
     <img src="https://goldcloverlanding.netlify.app/logo.png" alt="Gold Clover" class="logo">
 
     <!-- TEXTO LLAMATIVO -->
-    <p class="description">🚀 ¡Activá AHORA tu <span>BONO del 30% EXTRA</span> por WhatsApp!</p>
+    <p class="description">¡ESCRIBINOS EN WHATSAPP Y RECIBÍ UN 30% EXTRA!</p>
+
+    <!-- AVISO DE AUTOREDIRECCIÓN -->
+    <div class="autoredirect">⏳ Te estamos redirigiendo a WhatsApp automáticamente...</div>
 
     <!-- FLECHA SEÑAL -->
     <div class="arrow">👇</div>
 
-    <!-- BOTON WHATSAPP -->
-    <button class="cta-button" onclick="handleButtonClick()">
+    <!-- BOTON WHATSAPP (backup) -->
+    <button class="cta-button" onclick="openWhatsApp()">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        <span>Chatear y Reclamar Bono</span>
+        Activar Beneficio
     </button>
 
     <!-- CONTADOR -->
@@ -139,39 +148,15 @@ body {
 </div>
 
 <script>
-// PARTICULAS
-class ParticleSystem {
-    constructor(){ this.particles=[]; this.container=document.getElementById('particles'); this.lastTime=0; this.isRunning=false; }
-    createParticle(){ return {x:Math.random()*window.innerWidth, y:window.innerHeight+10, speed:Math.random()*2+1, opacity:Math.random()*0.6+0.2, element:null}; }
-    init(){ for(let i=0;i<15;i++){ let p=this.createParticle(); let e=document.createElement('div'); e.className='particle'; e.style.left=p.x+'px'; e.style.top=p.y+'px'; e.style.opacity=p.opacity; this.container.appendChild(e); p.element=e; this.particles.push(p);} this.start();}
-    update(currentTime){ if(currentTime-this.lastTime>50){ this.particles.forEach(p=>{ p.y-=p.speed; if(p.y<-10){ p.y=window.innerHeight+10; p.x=Math.random()*window.innerWidth; p.opacity=Math.random()*0.6+0.2; } p.element.style.transform=`translate3d(${p.x}px,${p.y}px,0)`; p.element.style.opacity=p.opacity; }); this.lastTime=currentTime;} if(this.isRunning) requestAnimationFrame((t)=>this.update(t));}
-    start(){ this.isRunning=true; requestAnimationFrame((t)=>this.update(t)); }
-    stop(){ this.isRunning=false; }
-}
-let particleSystem = new ParticleSystem();
-window.addEventListener('load',()=>{ particleSystem.init(); });
-document.addEventListener('visibilitychange',()=>{ if(particleSystem){ document.hidden?particleSystem.stop():particleSystem.start(); } });
-
-// WhatsApp + CAPI
-function handleButtonClick(){
-    const data = {
-        email: '', 
-        phone: '5491125379784',
-        eventName: 'Lead',
-        pageUrl: window.location.href
-    };
-
-    fetch('/.netlify/functions/capi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    }).then(res => res.json()).then(console.log);
-
-    // Abrir WhatsApp
+// FUNCION PARA ABRIR WHATSAPP
+function openWhatsApp(){
     const phoneNumber="5491125379784";
     const message="¡Hola! Quiero activar mi beneficio 🍀";
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    window.location.href=`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 }
+
+// AUTO-REDIRECCIÓN EN 3 SEGUNDOS
+setTimeout(openWhatsApp, 3000);
 
 // CONTADOR
 let countdownTime = 5*60; 
@@ -198,11 +183,18 @@ notifications.forEach(n=>{
     notifContainer.appendChild(div); 
 });
 
-// Pixel Frontend
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod? n.callMethod.apply(n,arguments):n.queue.push(arguments)}; if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0'; n.queue=[]; t=b.createElement(e);t.async=!0; t.src=v; s=b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1491129108755605'); 
-fbq('track','PageView');
-
+// PARTICULAS
+class ParticleSystem {
+    constructor(){ this.particles=[]; this.container=document.getElementById('particles'); this.lastTime=0; this.isRunning=false; }
+    createParticle(){ return {x:Math.random()*window.innerWidth, y:window.innerHeight+10, speed:Math.random()*2+1, opacity:Math.random()*0.6+0.2, element:null}; }
+    init(){ for(let i=0;i<15;i++){ let p=this.createParticle(); let e=document.createElement('div'); e.className='particle'; e.style.left=p.x+'px'; e.style.top=p.y+'px'; e.style.opacity=p.opacity; this.container.appendChild(e); p.element=e; this.particles.push(p);} this.start();}
+    update(currentTime){ if(currentTime-this.lastTime>50){ this.particles.forEach(p=>{ p.y-=p.speed; if(p.y<-10){ p.y=window.innerHeight+10; p.x=Math.random()*window.innerWidth; p.opacity=Math.random()*0.6+0.2; } p.element.style.transform=`translate3d(${p.x}px,${p.y}px,0)`; p.element.style.opacity=p.opacity; }); this.lastTime=currentTime;} if(this.isRunning) requestAnimationFrame((t)=>this.update(t));}
+    start(){ this.isRunning=true; requestAnimationFrame((t)=>this.update(t)); }
+    stop(){ this.isRunning=false; }
+}
+let particleSystem = new ParticleSystem();
+window.addEventListener('load',()=>{ particleSystem.init(); });
+document.addEventListener('visibilitychange',()=>{ if(particleSystem){ document.hidden?particleSystem.stop():particleSystem.start(); } });
 </script>
 
 </body>
